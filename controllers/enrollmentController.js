@@ -6,7 +6,7 @@ exports.addEnrollments = async (req, res) => {
   res.send(enroll);
 };
 
-exports.getEnrollments = async (res) => {
+exports.getEnrollments = async (req, res) => {
   const enrolls = await Enrollment.find().populate('Student_Id', 'Course_Id');
   res.send(enrolls);
 };

@@ -1,4 +1,5 @@
 const Course = require('../models/Courses');
+const Enrollment = require('../models/Enrollments');
 
 exports.addCourse = async (req, res) => {
 
@@ -7,7 +8,7 @@ exports.addCourse = async (req, res) => {
   res.send(cr);
 };
 
-exports.getCourses = async (res) => {
+exports.getCourses = async (req,res) => {
   const crs = await Course.find();
   res.send(crs);
 };
@@ -23,6 +24,10 @@ exports.updateCourse = async (req, res) => {
 };
 
 exports.deleteCourse = async (req, res) => {
-  await Course.findByIdAndDelete(req.params.id);
+  const cr = req.params.id;
+  
+  await Enrollment.updateMany({Course_Id: cr}, {$set: {Course_Id:null}});
+  //To set 'ON DELETE SET NULL' on Enrollments collection when the course is deleted.
+  await Course.findByIdAndDelete(cr);
   res.send({ message: "Course deleted" });
 };

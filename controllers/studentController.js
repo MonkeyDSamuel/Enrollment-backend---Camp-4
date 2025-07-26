@@ -1,4 +1,5 @@
 const Student = require('../models/Students');
+const Enrollment = require('../models/Enrollments');
 
 exports.addStudent = async (req, res) => {
 
@@ -23,6 +24,10 @@ exports.updateStudent = async (req, res) => {
 };
 
 exports.deleteStudent = async (req, res) => {
-  await Student.findByIdAndDelete(req.params.id);
+  const stud = req.params.id;
+
+  await Enrollment.updateMany({Student_Id: stud}, {$set: {Student_Id:null}});
+  //to set 'ON DELETE SET NULL' on Enrollments collection
+  await Student.findByIdAndDelete(stud);
   res.send({ message: "Student deleted" });
 };
